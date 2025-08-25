@@ -16,7 +16,7 @@
 
 <hr/>
 
-[![Discord](https://dcbadge.vercel.app/api/server/26aArMy8tT?style=flat&compact=true)](https://discord.gg/26aArMy8tT)
+[![Discord](https://dcbadge.limes.pink/api/server/26aArMy8tT?style=flat)](https://discord.gg/26aArMy8tT)
 
 ![preview](.assets/perplexica-screenshot.png?)
 
@@ -87,6 +87,13 @@ There are mainly 2 ways of installing Perplexica - With Docker, Without Docker. 
 4. Update environment variables in `docker-compose.yaml` file to configure `config.toml`. 
 
 Example: 
+   - `OPENAI`: Your OpenAI API key. **You only need to fill this if you wish to use OpenAI's models**.
+   - `OLLAMA`: Your Ollama API URL. You should enter it as `http://host.docker.internal:PORT_NUMBER`. If you installed Ollama on port 11434, use `http://host.docker.internal:11434`. For other ports, adjust accordingly. **You need to fill this if you wish to use Ollama's models instead of OpenAI's**.
+   - `GROQ`: Your Groq API key. **You only need to fill this if you wish to use Groq's hosted models**.
+   - `ANTHROPIC`: Your Anthropic API key. **You only need to fill this if you wish to use Anthropic models**.
+   - `Gemini`: Your Gemini API key. **You only need to fill this if you wish to use Google's models**.
+   - `DEEPSEEK`: Your Deepseek API key. **Only needed if you want Deepseek models.**
+   - `AIMLAPI`: Your AI/ML API key. **Only needed if you want to use AI/ML API models and embeddings.**
 
 Below section in `config.toml` can be configured using variables `MODELS_CUSTOM_OPENAI_API_KEY="sk-123456"`, `MODELS_CUSTOM_OPENAI_API_URL="http://localopenai:11134"` and `MODELS_CUSTOM_OPENAI_MODEL_NAME="meta-llama/llama-4"`
 
@@ -113,7 +120,7 @@ MODEL_NAME = "meta-llama/llama-4"
 2. Clone the repository and rename the `sample.config.toml` file to `config.toml` in the root directory. Ensure you complete all required fields in this file.
 3. After populating the configuration run `npm i`.
 4. Install the dependencies and then execute `npm run build`.
-5. Finally, start the app by running `npm rum start`
+5. Finally, start the app by running `npm run start`
 
 **Note**: Using Docker is recommended as it simplifies the setup process, especially for managing environment variables and dependencies.
 
@@ -134,7 +141,7 @@ If you're encountering an Ollama connection error, it is likely due to the backe
 
 3. **Linux Users - Expose Ollama to Network:**
 
-   - Inside `/etc/systemd/system/ollama.service`, you need to add `Environment="OLLAMA_HOST=0.0.0.0"`. Then restart Ollama by `systemctl restart ollama`. For more information see [Ollama docs](https://github.com/ollama/ollama/blob/main/docs/faq.md#setting-environment-variables-on-linux)
+   - Inside `/etc/systemd/system/ollama.service`, you need to add `Environment="OLLAMA_HOST=0.0.0.0:11434"`. (Change the port number if you are using a different one.) Then reload the systemd manager configuration with `systemctl daemon-reload`, and restart Ollama by `systemctl restart ollama`. For more information see [Ollama docs](https://github.com/ollama/ollama/blob/main/docs/faq.md#setting-environment-variables-on-linux)
 
    - Ensure that the port (default is 11434) is not blocked by your firewall.
 

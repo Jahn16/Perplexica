@@ -20,32 +20,36 @@ import SearchImages from './SearchImages';
 import SearchVideos from './SearchVideos';
 import { useSpeech } from 'react-text-to-speech';
 import ThinkBox from './ThinkBox';
+import { useChat } from '@/lib/hooks/useChat';
 
-const ThinkTagProcessor = ({ children }: { children: React.ReactNode }) => {
-  return <ThinkBox content={children as string} />;
+const ThinkTagProcessor = ({
+  children,
+  thinkingEnded,
+}: {
+  children: React.ReactNode;
+  thinkingEnded: boolean;
+}) => {
+  return (
+    <ThinkBox content={children as string} thinkingEnded={thinkingEnded} />
+  );
 };
 
 const MessageBox = ({
   message,
   messageIndex,
-  history,
-  loading,
   dividerRef,
   isLast,
-  rewrite,
-  sendMessage,
 }: {
   message: Message;
   messageIndex: number;
-  history: Message[];
-  loading: boolean;
   dividerRef?: MutableRefObject<HTMLDivElement | null>;
   isLast: boolean;
-  rewrite: (messageId: string) => void;
-  sendMessage: (message: string) => void;
 }) => {
+  const { loading, messages: history, sendMessage, rewrite } = useChat();
+
   const [parsedMessage, setParsedMessage] = useState(message.content);
   const [speechMessage, setSpeechMessage] = useState(message.content);
+  const [thinkingEnded, setThinkingEnded] = useState(false);
 
   useEffect(() => {
     const citationRegex = /\[([^\]]+)\]/g;
@@ -59,6 +63,10 @@ const MessageBox = ({
       if (openThinkTag > closeThinkTag) {
         processedMessage += '</think> <a> </a>'; // The extra <a> </a> is to prevent the the think component from looking bad
       }
+    }
+
+    if (message.role === 'assistant' && message.content.includes('</think>')) {
+      setThinkingEnded(true);
     }
 
     if (
@@ -88,7 +96,7 @@ const MessageBox = ({
                 if (url) {
                   return `<a href="${url}" target="_blank" className="bg-light-secondary dark:bg-dark-secondary px-1 rounded ml-1 no-underline text-xs text-black/70 dark:text-white/70 relative">${numStr}</a>`;
                 } else {
-                  return `[${numStr}]`;
+                  return ``;
                 }
               })
               .join('');
@@ -97,6 +105,14 @@ const MessageBox = ({
           },
         ),
       );
+      setSpeechMessage(message.content.replace(regex, ''));
+      return;
+    } else if (
+      message.role === 'assistant' &&
+      message?.sources &&
+      message.sources.length === 0
+    ) {
+      setParsedMessage(processedMessage.replace(regex, ''));
       setSpeechMessage(message.content.replace(regex, ''));
       return;
     }
@@ -111,6 +127,9 @@ const MessageBox = ({
     overrides: {
       think: {
         component: ThinkTagProcessor,
+        props: {
+          thinkingEnded: thinkingEnded,
+        },
       },
     },
   };
