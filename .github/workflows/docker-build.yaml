@@ -36,11 +36,11 @@ jobs:
           DOCKERFILE=app.dockerfile
           IMAGE_NAME=perplexica
           docker buildx build --platform linux/amd64 \
-            --cache-from=type=registry,ref=itzcrazykns1337/${IMAGE_NAME}:amd64 \
+            --cache-from=type=registry,ref=jpdeoliveiraferreira/${IMAGE_NAME}:amd64 \
             --cache-to=type=inline \
             --provenance false \
             -f $DOCKERFILE \
-            -t itzcrazykns1337/${IMAGE_NAME}:amd64 \
+            -t jpdeoliveiraferreira/${IMAGE_NAME}:amd64 \
             --push .
 
       - name: Build and push AMD64 release Docker image
@@ -49,11 +49,11 @@ jobs:
           DOCKERFILE=app.dockerfile
           IMAGE_NAME=perplexica
           docker buildx build --platform linux/amd64 \
-            --cache-from=type=registry,ref=itzcrazykns1337/${IMAGE_NAME}:${{ env.RELEASE_VERSION }}-amd64 \
+            --cache-from=type=registry,ref=jpdeoliveiraferreira/${IMAGE_NAME}:${{ env.RELEASE_VERSION }}-amd64 \
             --cache-to=type=inline \
             --provenance false \
             -f $DOCKERFILE \
-            -t itzcrazykns1337/${IMAGE_NAME}:${{ env.RELEASE_VERSION }}-amd64 \
+            -t jpdeoliveiraferreira/${IMAGE_NAME}:${{ env.RELEASE_VERSION }}-amd64 \
             --push .
 
   build-arm64:
@@ -84,11 +84,11 @@ jobs:
           DOCKERFILE=app.dockerfile
           IMAGE_NAME=perplexica
           docker buildx build --platform linux/arm64 \
-            --cache-from=type=registry,ref=itzcrazykns1337/${IMAGE_NAME}:arm64 \
+            --cache-from=type=registry,ref=jpdeoliveiraferreira/${IMAGE_NAME}:arm64 \
             --cache-to=type=inline \
             --provenance false \
             -f $DOCKERFILE \
-            -t itzcrazykns1337/${IMAGE_NAME}:arm64 \
+            -t jpdeoliveiraferreira/${IMAGE_NAME}:arm64 \
             --push .
 
       - name: Build and push ARM64 release Docker image
@@ -97,11 +97,11 @@ jobs:
           DOCKERFILE=app.dockerfile
           IMAGE_NAME=perplexica
           docker buildx build --platform linux/arm64 \
-            --cache-from=type=registry,ref=itzcrazykns1337/${IMAGE_NAME}:${{ env.RELEASE_VERSION }}-arm64 \
+            --cache-from=type=registry,ref=jpdeoliveiraferreira/${IMAGE_NAME}:${{ env.RELEASE_VERSION }}-arm64 \
             --cache-to=type=inline \
             --provenance false \
             -f $DOCKERFILE \
-            -t itzcrazykns1337/${IMAGE_NAME}:${{ env.RELEASE_VERSION }}-arm64 \
+            -t jpdeoliveiraferreira/${IMAGE_NAME}:${{ env.RELEASE_VERSION }}-arm64 \
             --push .
 
   manifest:
@@ -123,16 +123,16 @@ jobs:
         if: github.ref == 'refs/heads/master' && github.event_name == 'push'
         run: |
           IMAGE_NAME=perplexica
-          docker manifest create itzcrazykns1337/${IMAGE_NAME}:main \
-            --amend itzcrazykns1337/${IMAGE_NAME}:amd64 \
-            --amend itzcrazykns1337/${IMAGE_NAME}:arm64
-          docker manifest push itzcrazykns1337/${IMAGE_NAME}:main
+          docker manifest create jpdeoliveiraferreira/${IMAGE_NAME}:main \
+            --amend jpdeoliveiraferreira/${IMAGE_NAME}:amd64 \
+            --amend jpdeoliveiraferreira/${IMAGE_NAME}:arm64
+          docker manifest push jpdeoliveiraferreira/${IMAGE_NAME}:main
 
       - name: Create and push multi-arch manifest for releases
         if: github.event_name == 'release'
         run: |
           IMAGE_NAME=perplexica
-          docker manifest create itzcrazykns1337/${IMAGE_NAME}:${{ env.RELEASE_VERSION }} \
-            --amend itzcrazykns1337/${IMAGE_NAME}:${{ env.RELEASE_VERSION }}-amd64 \
-            --amend itzcrazykns1337/${IMAGE_NAME}:${{ env.RELEASE_VERSION }}-arm64
-          docker manifest push itzcrazykns1337/${IMAGE_NAME}:${{ env.RELEASE_VERSION }}
+          docker manifest create jpdeoliveiraferreira/${IMAGE_NAME}:${{ env.RELEASE_VERSION }} \
+            --amend jpdeoliveiraferreira/${IMAGE_NAME}:${{ env.RELEASE_VERSION }}-amd64 \
+            --amend jpdeoliveiraferreira/${IMAGE_NAME}:${{ env.RELEASE_VERSION }}-arm64
+          docker manifest push jpdeoliveiraferreira/${IMAGE_NAME}:${{ env.RELEASE_VERSION }}
