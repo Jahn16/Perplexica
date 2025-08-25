@@ -2,7 +2,7 @@
 
 set -e
 
-CONFIG_TOML_FILE=/home/perplexica/config.toml
+CONFIG_TOML_FILE=/config/config.toml
 
 TMP_FILE=${CONFIG_TOML_FILE}.tmp
 touch $TMP_FILE
