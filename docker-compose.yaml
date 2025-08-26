@@ -10,13 +10,12 @@ services:
     restart: unless-stopped
 
   app:
-    image: itzcrazykns1337/perplexica:main
     build:
       context: .
       dockerfile: app.dockerfile
     environment:
       - SEARXNG_API_URL=http://searxng:8080
-      - GENERAL_SIMILARITY_MEASURE=cosine # "cosine" or "dot"
+      - GENERAL_SIMILARITY_MEASURE="cosine" # "cosine" or "dot"
       - GENERAL_KEEP_ALIVE="5m"             # How long to keep Ollama models loaded into memory. (Instead of using -1 use "-1m")
       - MODELS_OPENAI_API_KEY=""
       - MODELS_GROQ_API_KEY=""

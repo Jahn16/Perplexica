@@ -34,7 +34,7 @@ while IFS= read -r line; do
     env_var_value=$(echo "${!env_var_name}")
     if [ -n "$env_var_value" ]; then
         new_value="$env_var_value"
-        echo "$key = $new_value" >> "$TMP_FILE"
+        echo "$key = \"$new_value\"" >> "$TMP_FILE"
     else
         # Keep original line if no env var exists
         echo "$line" >> "$TMP_FILE"
